@@ -1,0 +1,42 @@
+{
+    "printWidth": 120,
+    "tabWidth": 4,
+    "useTabs": false,
+    "semi": true,
+    "singleQuote": true,
+    "jsxSingleQuote": false,
+    "quoteProps": "consistent",
+    "trailingComma": "es5",
+    "bracketSpacing": true,
+    "bracketSameLine": false,
+    "arrowParens": "always",
+    "sortImports": {
+        "groups": [
+            "external",
+            "relative"
+        ],
+        "customGroups": [
+            {
+                "groupName": "relative",
+                "elementNamePattern": [
+                    "./**",
+                    "../**",
+                    ".",
+                    ".."
+                ]
+            },
+            {
+                "groupName": "external",
+                "elementNamePattern": [
+                    "**"
+                ]
+            }
+        ],
+        "newlinesBetween": true
+    },
+    "sortTailwindcss": {
+        "functions": [
+            "clsx"
+        ]
+    }
+}

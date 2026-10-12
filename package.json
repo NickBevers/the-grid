@@ -1,0 +1,75 @@
+{
+    "name": "@nord-forge/the-grid",
+    "version": "0.1.0",
+    "type": "module",
+    "description": "A virtualized React data grid in normal document flow. React is its only peer; no runtime dependencies.",
+    "keywords": [
+        "react",
+        "data-grid",
+        "grid",
+        "table",
+        "virtualized",
+        "spreadsheet",
+        "headless"
+    ],
+    "license": "MIT",
+    "author": "Nick Bevers <hello@nickbevers.dev>",
+    "homepage": "https://github.com/nord-forge/the-grid#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nord-forge/the-grid.git"
+    },
+    "bugs": {
+        "url": "https://github.com/nord-forge/the-grid/issues"
+    },
+    "module": "./dist/index.js",
+    "types": "./dist/types/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/types/index.d.ts",
+            "import": "./dist/index.js"
+        },
+        "./styles.css": "./dist/styles.css"
+    },
+    "files": [
+        "dist",
+        "README.md",
+        "LICENSE",
+        "CHANGELOG.md"
+    ],
+    "sideEffects": [
+        "*.css"
+    ],
+    "publishConfig": {
+        "access": "public"
+    },
+    "scripts": {
+        "tsc": "tsc --noEmit",
+        "build": "vite build -c vite.lib.config.ts && tsc -p tsconfig.lib.json && cp src/styles/grid.css dist/styles.css && node scripts/check-styles.mjs && node scripts/check-dist.mjs",
+        "test": "vitest run src",
+        "check": "npm run tsc && npm test && npm run build && npm run playground:check",
+        "playground": "vite playground --port 5194 --strictPort",
+        "playground:check": "node playground/checks/vertical.mjs && node playground/checks/horizontal.mjs && node playground/checks/geometry.mjs && node playground/checks/interactive.mjs && node playground/checks/styling.mjs && node playground/checks/rows.mjs && node playground/checks/server.mjs && node playground/checks/filters.mjs && node playground/checks/groups.mjs && node playground/checks/writes.mjs && node playground/checks/views.mjs",
+        "format": "oxfmt src playground scripts",
+        "format:check": "oxfmt --check src playground scripts",
+        "check-styles": "node scripts/check-styles.mjs",
+        "perf": "node playground/checks/perf.mjs",
+        "prepublishOnly": "npm run tsc && npm test && npm run build"
+    },
+    "peerDependencies": {
+        "react": "^19.2.0",
+        "react-dom": "^19.2.0"
+    },
+    "devDependencies": {
+        "@types/react": "^19.2.14",
+        "@types/react-dom": "^19.2.3",
+        "@vitejs/plugin-react": "^6.0.1",
+        "oxfmt": "^0.64.0",
+        "playwright": "1.59.1",
+        "react": "^19.2.4",
+        "react-dom": "^19.2.4",
+        "typescript": "^7.0.2",
+        "vite": "^8.0.3",
+        "vitest": "^4.1.5"
+    }
+}
