@@ -1,0 +1,906 @@
+/*
+ * @nord-forge/the-grid default theme.
+ *
+ * Every rule sits in the `the-grid` cascade layer, inside `:where()` and under the grid's root part, so it
+ * styles nothing outside an owned grid, has no specificity, and
+ * loses to any style the application writes outside the layer. Themes override the `--the-grid-*` tokens
+ * on the grid (`<Grid className="...">`) or on any ancestor; state styling targets the public parts
+ * (`data-grid-part`) and the state attributes listed in `GRID_PARTS` and `GRID_STATES`. Nothing here needs
+ * `!important`, and nothing positions itself absolutely.
+ *
+ * The palette is neutral on purpose; brand colours belong in the app's theme. Light by default; dark
+ * tokens apply with `colorScheme="dark"`, or `"system"` to follow the operating system.
+ */
+
+@layer the-grid {
+    :where([data-grid-part='root']) {
+        color-scheme: light;
+
+        /* Type */
+        --the-grid-font-family: inherit;
+        --the-grid-font-size: 13px;
+        --the-grid-line-height: 1.35;
+        --the-grid-header-font-weight: 600;
+
+        /* Surfaces and text */
+        --the-grid-background: #ffffff;
+        --the-grid-foreground: #27272a;
+        --the-grid-muted-foreground: #71717a;
+        --the-grid-header-background: #f4f4f5;
+        --the-grid-header-foreground: #3f3f46;
+        --the-grid-footer-background: var(--the-grid-header-background);
+        --the-grid-footer-foreground: var(--the-grid-muted-foreground);
+
+        /* Lines */
+        --the-grid-border-color: #e4e4e7;
+        --the-grid-row-border-color: var(--the-grid-border-color);
+        --the-grid-column-border-color: var(--the-grid-border-color);
+        --the-grid-header-border-color: #d4d4d8;
+        --the-grid-radius: 6px;
+
+        /* Spacing (the default row and header heights are set by the `density` prop) */
+        --the-grid-cell-padding-x: 10px;
+        --the-grid-cell-padding-y: 6px;
+        --the-grid-group-indent: 18px;
+
+        /* Accent and interaction states */
+        --the-grid-accent: #52525b;
+        --the-grid-row-hover-background: rgb(0 0 0 / 3%);
+        --the-grid-cell-hover-outline-color: #d4d4d8;
+        --the-grid-focus-ring-color: var(--the-grid-accent);
+        --the-grid-focus-ring-width: 1px;
+        --the-grid-focus-background: color-mix(in srgb, var(--the-grid-accent) 8%, transparent);
+        --the-grid-selected-row-background: color-mix(in srgb, var(--the-grid-accent) 10%, transparent);
+        --the-grid-selected-row-border-color: color-mix(in srgb, var(--the-grid-accent) 55%, transparent);
+        --the-grid-active-row-background: var(--the-grid-selected-row-background);
+        --the-grid-range-background: color-mix(in srgb, var(--the-grid-accent) 12%, transparent);
+        --the-grid-range-border-color: var(--the-grid-accent);
+        --the-grid-fill-handle-color: var(--the-grid-accent);
+        --the-grid-fill-target-background: color-mix(in srgb, var(--the-grid-accent) 6%, transparent);
+        --the-grid-editing-outline-color: var(--the-grid-accent);
+        --the-grid-editor-background: var(--the-grid-background);
+
+        /* Validation */
+        --the-grid-invalid-color: #dc2626;
+        --the-grid-invalid-background: #fef2f2;
+
+        /* Row kinds */
+        --the-grid-group-row-background: #fafafa;
+        --the-grid-full-width-row-background: var(--the-grid-group-row-background);
+        --the-grid-loading-color: #e4e4e7;
+
+        /* Pinned sections and header while content scrolls under them */
+        --the-grid-pinned-border-color: var(--the-grid-header-border-color);
+        --the-grid-scroll-shadow-color: rgb(0 0 0 / 8%);
+
+        /* Overlays */
+        --the-grid-overlay-foreground: var(--the-grid-muted-foreground);
+        --the-grid-overlay-padding: 32px;
+
+        /* Menus and popups */
+        --the-grid-menu-background: var(--the-grid-background);
+        --the-grid-menu-foreground: var(--the-grid-foreground);
+        --the-grid-menu-border-color: var(--the-grid-border-color);
+        --the-grid-menu-radius: 8px;
+        --the-grid-menu-shadow: 0 4px 16px rgb(0 0 0 / 12%);
+        --the-grid-menu-item-hover-background: var(--the-grid-header-background);
+        --the-grid-menu-destructive-color: var(--the-grid-invalid-color);
+
+        font-family: var(--the-grid-font-family);
+        font-size: var(--the-grid-font-size);
+        line-height: var(--the-grid-line-height);
+        color: var(--the-grid-foreground);
+        background: var(--the-grid-background);
+        border: 1px solid var(--the-grid-border-color);
+        border-radius: var(--the-grid-radius);
+        overflow: clip;
+    }
+
+    /*
+     * Dark tokens. Keyed on the colorScheme prop rather than written with light-dark(): bundlers that lower
+     * light-dark() for older targets (Lightning CSS, Tailwind v4) break it on elements without their own
+     * color-scheme, and an attribute cannot be rewritten.
+     */
+    :where([data-grid-part='root'][data-color-scheme='dark']) {
+        color-scheme: dark;
+        --the-grid-background: #18181b;
+        --the-grid-foreground: #e4e4e7;
+        --the-grid-muted-foreground: #a1a1aa;
+        --the-grid-header-background: #27272a;
+        --the-grid-header-foreground: #d4d4d8;
+        --the-grid-border-color: #3f3f46;
+        --the-grid-header-border-color: #52525b;
+        --the-grid-accent: #a1a1aa;
+        --the-grid-row-hover-background: rgb(255 255 255 / 4%);
+        --the-grid-cell-hover-outline-color: #52525b;
+        --the-grid-invalid-color: #f87171;
+        --the-grid-invalid-background: rgb(248 113 113 / 12%);
+        --the-grid-group-row-background: #202023;
+        --the-grid-loading-color: #3f3f46;
+        --the-grid-scroll-shadow-color: rgb(0 0 0 / 40%);
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :where([data-grid-part='root'][data-color-scheme='system']) {
+            color-scheme: dark;
+            --the-grid-background: #18181b;
+            --the-grid-foreground: #e4e4e7;
+            --the-grid-muted-foreground: #a1a1aa;
+            --the-grid-header-background: #27272a;
+            --the-grid-header-foreground: #d4d4d8;
+            --the-grid-border-color: #3f3f46;
+            --the-grid-header-border-color: #52525b;
+            --the-grid-accent: #a1a1aa;
+            --the-grid-row-hover-background: rgb(255 255 255 / 4%);
+            --the-grid-cell-hover-outline-color: #52525b;
+            --the-grid-invalid-color: #f87171;
+            --the-grid-invalid-background: rgb(248 113 113 / 12%);
+            --the-grid-group-row-background: #202023;
+            --the-grid-loading-color: #3f3f46;
+            --the-grid-scroll-shadow-color: rgb(0 0 0 / 40%);
+        }
+    }
+
+    :where([data-grid-part='root'][data-density='compact']) {
+        --the-grid-cell-padding-x: 6px;
+        --the-grid-cell-padding-y: 3px;
+    }
+
+    :where([data-grid-part='root']) :where(*) {
+        box-sizing: border-box;
+    }
+
+    /* No text selection while a range, fill or row drag is in progress. */
+    :where([data-grid-part='root']) :where([data-grid-part='viewport'][data-dragging]) {
+        user-select: none;
+    }
+
+    /* Header */
+
+    :where([data-grid-part='root']) :where([data-grid-part='header']) {
+        background: var(--the-grid-header-background);
+        color: var(--the-grid-header-foreground);
+        font-weight: var(--the-grid-header-font-weight);
+    }
+
+    :where([data-grid-part='root'][data-scrolled-top]) :where([data-grid-part='header']) {
+        box-shadow: 0 1px 4px var(--the-grid-scroll-shadow-color);
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='header-row'], [data-grid-part='group-header-row']) {
+        background: var(--the-grid-header-background);
+        border-bottom: 1px solid var(--the-grid-header-border-color);
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='group-header-cell']) {
+        border-right: 1px solid var(--the-grid-header-border-color);
+    }
+
+    /* The column line is an inset shadow, so the resize handle can paint over it. */
+    :where([data-grid-part='root']) :where([data-grid-part='header-cell']) {
+        box-shadow: inset -1px 0 0 0 var(--the-grid-header-border-color);
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='header-cell'], [data-grid-part='group-header-cell']) {
+        height: 100%;
+        /* clip, not hidden: hidden would make the cell the scroll container of a sticky group label. */
+        overflow: clip;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='header-content'], [data-grid-part='group-header-content']) {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        height: 100%;
+        padding-left: var(--the-grid-cell-padding-x);
+        white-space: nowrap;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='header-content'][data-sortable]) {
+        cursor: pointer;
+        user-select: none;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='header-label']) {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='group-header-label']) {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='sort-indicator']) {
+        flex: none;
+        color: var(--the-grid-muted-foreground);
+        font-variant-numeric: tabular-nums;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='group-toggle']) {
+        padding: 0 4px;
+        border: 1px solid var(--the-grid-header-border-color);
+        border-radius: 4px;
+        background: var(--the-grid-background);
+        color: inherit;
+        font: inherit;
+        line-height: 1;
+        cursor: pointer;
+    }
+
+    /*
+     * The resize zone straddles the column line, 5px on each side: the end handle covers the line (an inset
+     * shadow, so the handle can paint over it) and the 4px before it, and the next column's start handle
+     * the 5px after it. Hovering either marks the line and the pixel before it.
+     */
+    :where([data-grid-part='root']) :where([data-grid-part='resize-handle']) {
+        flex: none;
+        align-self: stretch;
+        width: 5px;
+        cursor: col-resize;
+        touch-action: none;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='resize-handle'][data-edge='start']) {
+        order: -1;
+        margin-right: calc(var(--the-grid-cell-padding-x) - 9px);
+        margin-left: calc(var(--the-grid-cell-padding-x) * -1);
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='resize-handle'][data-edge='end']:hover) {
+        background: linear-gradient(to left, var(--the-grid-accent) 2px, transparent 2px);
+    }
+
+    :where([data-grid-part='root'])
+        :where(
+            [data-grid-part='header-cell']:has(
+                + [data-grid-part='header-cell'] [data-grid-part='resize-handle'][data-edge='start']:hover
+            )
+        )
+        :where([data-grid-part='resize-handle'][data-edge='end']) {
+        background: linear-gradient(to left, var(--the-grid-accent) 2px, transparent 2px);
+    }
+
+    /* Rows */
+
+    /*
+     * Rows paint an opaque background with their tints layered on top, so the sticky pinned sections, which
+     * inherit the row's background, always cover the cells scrolling under them. Highlight edges are
+     * private variables the row and its pinned sections both draw, so the outline is unbroken.
+     */
+    :where([data-grid-part='root']) :where([data-grid-part='row']) {
+        --_grid-row-tint: transparent;
+        --_grid-row-hover: transparent;
+        --_grid-edge-top: 0 0 transparent;
+        --_grid-edge-bottom: 0 0 transparent;
+        --_grid-edge-left: 0 0 transparent;
+        --_grid-edge-right: 0 0 transparent;
+
+        background-color: var(--the-grid-background);
+        background-image:
+            linear-gradient(var(--_grid-row-hover), var(--_grid-row-hover)),
+            linear-gradient(var(--_grid-row-tint), var(--_grid-row-tint));
+        box-shadow:
+            var(--_grid-edge-top), var(--_grid-edge-bottom), var(--_grid-edge-left), var(--_grid-edge-right),
+            var(--_grid-full-width-line, 0 0 transparent);
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='row']:hover) {
+        --_grid-row-hover: var(--the-grid-row-hover-background);
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='row'][data-active]) {
+        --_grid-row-tint: var(--the-grid-active-row-background);
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='row'][data-selected]) {
+        --_grid-row-tint: var(--the-grid-selected-row-background);
+    }
+
+    /* A run of selected or active rows reads as one block: edges come from the row model. */
+    :where([data-grid-part='root']) :where([data-grid-part='row']:is([data-selected], [data-active])) {
+        --_grid-edge-left: inset 1px 0 0 0 var(--the-grid-selected-row-border-color);
+        --_grid-edge-right: inset -1px 0 0 0 var(--the-grid-selected-row-border-color);
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='row'][data-highlight-start]) {
+        --_grid-edge-top: inset 0 1px 0 0 var(--the-grid-selected-row-border-color);
+    }
+
+    /* The last row of a highlight run draws its edge in its cells' bottom line (cells own the line). */
+    :where([data-grid-part='root']) :where([data-grid-part='row'][data-highlight-end]) {
+        --_grid-row-bottom-line: var(--the-grid-selected-row-border-color);
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='row'][data-row-kind='group']) {
+        background-color: var(--the-grid-group-row-background);
+        font-weight: 600;
+    }
+
+    :where([data-grid-part='root'])
+        :where([data-grid-part='group-row-content'], [data-grid-part='group-cell-content']) {
+        display: inline-flex;
+        gap: 6px;
+        align-items: center;
+        min-width: 0;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='row-expand-toggle'], [data-grid-part='row-expand-spacer']) {
+        flex: none;
+        width: 20px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='row-expand-toggle']) {
+        cursor: pointer;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='row-group-label']) {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='row-group-count']) {
+        color: var(--the-grid-muted-foreground);
+        font-weight: 400;
+    }
+
+    /*
+     * A full-width cell is sticky, so it paints above the next row's cells. It stops 1px short and the row
+     * draws the bottom line, so a ring or range edge in the next row reaches that line like any other.
+     */
+    :where([data-grid-part='root']) :where([data-grid-part='row']:has(> [data-grid-part='full-width-row'])) {
+        --_grid-full-width-line: inset 0 -1px 0 0 var(--_grid-row-bottom-line, var(--the-grid-row-border-color));
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='full-width-row']) {
+        box-shadow: var(--_grid-top-line, 0 0 transparent);
+        display: flex;
+        align-items: center;
+        align-self: flex-start;
+        height: calc(100% - 1px);
+        padding: 0 var(--the-grid-cell-padding-x);
+        background: var(--the-grid-full-width-row-background);
+    }
+
+    /* Pinned sections: they draw the row's highlight edges on their outer sides, plus the scroll shadow. */
+
+    :where([data-grid-part='root']) :where([data-grid-part='pinned-left'], [data-grid-part='pinned-right']) {
+        --_grid-scroll-shadow: 0 0 transparent;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='pinned-left']) {
+        border-right: 1px solid var(--the-grid-pinned-border-color);
+        box-shadow:
+            var(--_grid-edge-top, 0 0 transparent), var(--_grid-edge-bottom, 0 0 transparent),
+            var(--_grid-edge-left, 0 0 transparent), var(--_grid-scroll-shadow);
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='pinned-right']) {
+        border-left: 1px solid var(--the-grid-pinned-border-color);
+        box-shadow:
+            var(--_grid-edge-top, 0 0 transparent), var(--_grid-edge-bottom, 0 0 transparent),
+            var(--_grid-edge-right, 0 0 transparent), var(--_grid-scroll-shadow);
+    }
+
+    :where([data-grid-part='root'][data-scrolled-left]) :where([data-grid-part='pinned-left']) {
+        --_grid-scroll-shadow: 2px 0 4px -2px var(--the-grid-scroll-shadow-color);
+    }
+
+    :where([data-grid-part='root'][data-scrolled-right]) :where([data-grid-part='pinned-right']) {
+        --_grid-scroll-shadow: -2px 0 4px -2px var(--the-grid-scroll-shadow-color);
+    }
+
+    /*
+     * Cells. Content and the fill handle share one grid area, so the handle sits in the corner in flow.
+     *
+     * Rings (focus, hover, editing, validation) and range edges sit exactly on the grid lines around a cell.
+     * The left line is the previous cell's right border and the top
+     * line belongs to the cell above. An outline grows the same on every side and cannot match that. So a
+     * cell owns its right line (its border) and its bottom line (an inset strip, which stays inside the
+     * border), and reaches the left and top lines with outer strips plus the top-left corner. Rings and range
+     * edges colour the cell's own two lines and add the outer strips; a range's sides then run unbroken
+     * across rows. Each state sets the colours.
+     */
+
+    :where([data-grid-part='root']) :where([data-grid-part='cell']) {
+        --_grid-ring: transparent;
+        --_grid-ring-width: 1px;
+        --_grid-ring-shadow:
+            calc(var(--_grid-ring-width) * -1) 0 0 0 var(--_grid-ring-left, var(--_grid-ring)),
+            0 calc(var(--_grid-ring-width) * -1) 0 0 var(--_grid-ring-top, var(--_grid-ring)),
+            calc(var(--_grid-ring-width) * -1) calc(var(--_grid-ring-width) * -1) 0 0
+                var(--_grid-ring-corner, var(--_grid-ring));
+        /* Coloured own lines (rings, ranges): transparent unless a state sets them. */
+        --_grid-right-line: transparent;
+        --_grid-bottom-line: transparent;
+        --_grid-range-top: 0 0 transparent;
+        --_grid-range-left: 0 0 transparent;
+        --_grid-range-top-left: 0 0 transparent;
+
+        /*
+         * Two layers, the first listed on top: coloured lines and strips, then the plain grid lines. A
+         * coloured edge therefore runs unbroken through every row and column line it crosses.
+         */
+        box-shadow:
+            var(--_grid-top-line, 0 0 transparent),
+            inset -1px 0 0 0 var(--_grid-right-line),
+            inset 0 -1px 0 0 var(--_grid-bottom-line),
+            var(--_grid-ring-shadow),
+            var(--_grid-range-top),
+            var(--_grid-range-left),
+            var(--_grid-range-top-left),
+            inset 0 -1px 0 0 var(--_grid-row-bottom-line, var(--the-grid-row-border-color)),
+            inset -1px 0 0 0 var(--the-grid-column-border-color);
+
+        display: grid;
+        align-items: center;
+        /* Stretched, not height 100%: a row sized to its content has no height to take a percentage of,
+           and a shorter cell must still fill it, its lines and background included. */
+        align-self: stretch;
+        padding: var(--the-grid-cell-padding-y) var(--the-grid-cell-padding-x);
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='cell']) > :where(*) {
+        grid-area: 1 / 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    :where([data-grid-part='root'])
+        :where([data-grid-part='cell'][data-editable]:hover:not([data-range], [data-focused])) {
+        --_grid-ring: var(--the-grid-cell-hover-outline-color);
+        --_grid-right-line: var(--_grid-ring);
+        --_grid-bottom-line: var(--_grid-ring);
+    }
+
+    /*
+     * Focus and selection outrank hover. A hovered cell leaves the top and left lines (and their corner)
+     * to a neighbour that draws them in a higher state; the grid marks those cells.
+     */
+    :where([data-grid-part='root']) :where([data-grid-part='cell'][data-hover-guard~='top']:hover) {
+        --_grid-ring-top: transparent;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='cell'][data-hover-guard~='left']:hover) {
+        --_grid-ring-left: transparent;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='cell'][data-hover-guard~='corner']:hover) {
+        --_grid-ring-corner: transparent;
+    }
+
+    :where([data-grid-part='root'])
+        :where([data-grid-part='viewport']:is(:focus-within, [data-menu-open]))
+        :where([data-grid-part='cell'][data-focused]:not([data-range], [data-editing])) {
+        --_grid-ring: var(--the-grid-focus-ring-color);
+        --_grid-ring-width: var(--the-grid-focus-ring-width);
+        --_grid-right-line: var(--_grid-ring);
+        --_grid-bottom-line: var(--_grid-ring);
+
+        background-color: var(--the-grid-focus-background);
+    }
+
+    :where([data-grid-part='root'])
+        :where([data-grid-part='viewport']:is(:focus-within, [data-menu-open]))
+        :where([data-grid-part='full-width-row'][data-focused]) {
+        outline: var(--the-grid-focus-ring-width) solid var(--the-grid-focus-ring-color);
+        outline-offset: calc(var(--the-grid-focus-ring-width) * -1);
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='cell'][data-range]) {
+        background-color: var(--the-grid-range-background);
+    }
+
+    /*
+     * The line under the header. A ring reaches its top line with an outer strip, which the sticky header
+     * would cover in the first row. So while the grid sits at the top, the first row draws that line inside
+     * itself and the header leaves it out; rings, range edges and highlight edges colour it like any other
+     * line. Once scrolled, the header draws it again over the rows passing beneath.
+     */
+    :where([data-grid-part='root']:not([data-scrolled-top])) :where([data-grid-part='header-row']) {
+        border-bottom-color: transparent;
+    }
+
+    :where([data-grid-part='root']:not([data-scrolled-top]))
+        :where([data-grid-part='row'][data-first-row])
+        :where([data-grid-part='cell'], [data-grid-part='full-width-row']) {
+        --_grid-top-line:
+            inset 0 var(--_grid-ring-width, 1px) 0 0 var(--_grid-ring, transparent),
+            inset 0 1px 0 0 var(--_grid-top-base, var(--the-grid-header-border-color));
+    }
+
+    :where([data-grid-part='root']:not([data-scrolled-top]))
+        :where([data-grid-part='row'][data-first-row][data-highlight-start])
+        :where([data-grid-part='cell'], [data-grid-part='full-width-row']) {
+        --_grid-top-base: var(--the-grid-selected-row-border-color);
+    }
+
+    :where([data-grid-part='root']:not([data-scrolled-top]))
+        :where([data-grid-part='row'][data-first-row])
+        :where([data-grid-part='cell'][data-range-top]) {
+        --_grid-top-base: var(--the-grid-range-border-color);
+    }
+
+    /* Range edges, on the grid lines like the rings above. */
+    :where([data-grid-part='root']) :where([data-grid-part='cell'][data-range-top]) {
+        --_grid-range-top: 0 -1px 0 0 var(--the-grid-range-border-color);
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='cell'][data-range-bottom]) {
+        --_grid-bottom-line: var(--the-grid-range-border-color);
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='cell'][data-range-left]) {
+        --_grid-range-left: -1px 0 0 0 var(--the-grid-range-border-color);
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='cell'][data-range-right]) {
+        --_grid-right-line: var(--the-grid-range-border-color);
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='cell'][data-range-top][data-range-left]) {
+        --_grid-range-top-left: -1px -1px 0 0 var(--the-grid-range-border-color);
+    }
+
+    /*
+     * The first cell of the left-pinned and center sections: its left line is the grid's edge or the pinned
+     * section's border, where an outer strip would be clipped or covered. Its rings and range edges draw
+     * that side inside the cell.
+     */
+    :where([data-grid-part='root']) :where([data-grid-part='cell'][data-section-start]) {
+        --_grid-ring-shadow:
+            inset var(--_grid-ring-width) 0 0 0 var(--_grid-ring-left, var(--_grid-ring)),
+            0 calc(var(--_grid-ring-width) * -1) 0 0 var(--_grid-ring-top, var(--_grid-ring)), 0 0 transparent;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='cell'][data-section-start][data-range-left]) {
+        --_grid-range-left: inset 1px 0 0 0 var(--the-grid-range-border-color);
+    }
+
+    :where([data-grid-part='root'])
+        :where([data-grid-part='cell'][data-section-start][data-range-top][data-range-left]) {
+        --_grid-range-top-left: 0 0 transparent;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='cell'][data-fill-target]) {
+        background-color: var(--the-grid-fill-target-background);
+        outline: 1px dashed var(--the-grid-range-border-color);
+        outline-offset: -1px;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='fill-handle']) {
+        align-self: end;
+        justify-self: end;
+        width: 7px;
+        height: 7px;
+        margin: 0 calc(var(--the-grid-cell-padding-x) * -1) calc(var(--the-grid-cell-padding-y) * -1) 0;
+        background: var(--the-grid-fill-handle-color);
+        cursor: crosshair;
+        touch-action: none;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='cell'][data-invalid]) {
+        --_grid-ring: var(--the-grid-invalid-color);
+        --_grid-right-line: var(--_grid-ring);
+        --_grid-bottom-line: var(--_grid-ring);
+
+        background-color: var(--the-grid-invalid-background);
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='cell-content']) {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='row-drag-handle']) {
+        flex: none;
+        width: 8px;
+        height: 14px;
+        background: radial-gradient(circle, var(--the-grid-muted-foreground) 1px, transparent 1.5px) 0 0 / 4px 4px;
+        cursor: grab;
+        opacity: 0.7;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='row'][data-row-dragging]) {
+        opacity: 0.5;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='row'][data-drop-position='before']) {
+        --_grid-edge-top: inset 0 2px 0 0 var(--the-grid-accent);
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='row'][data-drop-position='after']) {
+        --_grid-edge-bottom: inset 0 -2px 0 0 var(--the-grid-accent);
+        --_grid-row-bottom-line: var(--the-grid-accent);
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='cell-loading']) {
+        display: block;
+        width: 60%;
+        height: 0.6em;
+        border-radius: 3px;
+        background: var(--the-grid-loading-color);
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='row-checkbox'], [data-grid-part='header-checkbox']) {
+        margin: 0;
+        accent-color: var(--the-grid-accent);
+    }
+
+    /* Editing */
+
+    :where([data-grid-part='root']) :where([data-grid-part='cell'][data-editing]) {
+        --_grid-ring: var(--the-grid-editing-outline-color);
+        --_grid-right-line: var(--_grid-ring);
+        --_grid-bottom-line: var(--_grid-ring);
+
+        /* The ring's right and bottom lines are inside the cell; the editor stays clear of them. */
+        padding: 0 1px 1px 0;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-editor]) {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-editor][data-invalid]) {
+        outline: 1px solid var(--the-grid-invalid-color);
+        outline-offset: -1px;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='editor-input']) {
+        width: 100%;
+        height: 100%;
+        padding: 0 var(--the-grid-cell-padding-x);
+        border: 0;
+        outline: none;
+        background: var(--the-grid-editor-background);
+        color: inherit;
+        font: inherit;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='editor-error']) {
+        padding: 0 var(--the-grid-cell-padding-x);
+        color: var(--the-grid-invalid-color);
+        font-size: 0.85em;
+    }
+
+    /* Overlays and slots */
+
+    :where([data-grid-part='root']) :where([data-grid-part='overlay']) {
+        padding: var(--the-grid-overlay-padding);
+        color: var(--the-grid-overlay-foreground);
+        text-align: center;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='footer']) {
+        padding: 6px var(--the-grid-cell-padding-x);
+        border-top: 1px solid var(--the-grid-border-color);
+        background: var(--the-grid-footer-background);
+        color: var(--the-grid-footer-foreground);
+    }
+
+    /* Menus and popups (default renderers; apps usually render their own through renderMenu) */
+
+    :where([data-grid-part='root']) :where([data-grid-part='menu'], [data-grid-part='popup']) {
+        min-width: 160px;
+        margin: 0;
+        padding: 4px;
+        border: 1px solid var(--the-grid-menu-border-color);
+        border-radius: var(--the-grid-menu-radius);
+        background: var(--the-grid-menu-background);
+        color: var(--the-grid-menu-foreground);
+        box-shadow: var(--the-grid-menu-shadow);
+        font: inherit;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='menu-item']) {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        width: 100%;
+        padding: 6px 8px;
+        border: 0;
+        border-radius: calc(var(--the-grid-menu-radius) - 4px);
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        text-align: left;
+        cursor: pointer;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='menu-item']:is(:hover, :focus-visible):not(:disabled)) {
+        background: var(--the-grid-menu-item-hover-background);
+        outline: none;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='menu-item']:disabled) {
+        opacity: 0.5;
+        cursor: default;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='menu-item'][data-destructive]) {
+        color: var(--the-grid-menu-destructive-color);
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='menu-shortcut']) {
+        color: var(--the-grid-muted-foreground);
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='menu-separator']) {
+        height: 1px;
+        margin: 4px 0;
+        background: var(--the-grid-menu-border-color);
+    }
+
+    /* A write waiting for the server: dimmed until it settles. */
+    :where([data-grid-part='root']) :where([data-grid-part='cell'][data-pending]) > :where(*) {
+        opacity: 0.6;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='menu-children']) {
+        display: flex;
+        flex-direction: column;
+        padding-inline-start: 12px;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='header-menu-button']) {
+        display: inline-flex;
+        flex: none;
+        align-items: center;
+        justify-content: center;
+        width: 16px;
+        height: 20px;
+        margin-inline-end: 2px;
+        padding: 0;
+        border: 0;
+        border-radius: 3px;
+        background: transparent;
+        color: var(--the-grid-muted-foreground);
+        cursor: pointer;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='column-chooser']) {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 200px;
+        max-height: 360px;
+        padding: 8px 10px;
+        overflow: auto;
+        border: 1px solid var(--the-grid-header-border-color);
+        border-radius: 6px;
+        background: var(--the-grid-background);
+        color: var(--the-grid-foreground);
+        box-shadow: 0 6px 20px rgb(0 0 0 / 12%);
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='column-chooser-item']) {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        white-space: nowrap;
+    }
+
+    /* Header menu and filter panel */
+
+    :where([data-grid-part='root'])
+        :where([data-grid-part='menu-item'][data-checked])
+        :where([data-grid-part='menu-label']) {
+        font-weight: 600;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='header-filter-button']) {
+        display: inline-flex;
+        flex: none;
+        padding: 2px;
+        border: 0;
+        border-radius: 3px;
+        background: transparent;
+        color: var(--the-grid-muted-foreground);
+        cursor: pointer;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='pinned-top'], [data-grid-part='pinned-bottom']) {
+        background: var(--the-grid-background);
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='pinned-top']) {
+        box-shadow: inset 0 -1px 0 0 var(--the-grid-header-border-color);
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='pinned-bottom']) {
+        box-shadow: inset 0 1px 0 0 var(--the-grid-header-border-color);
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='header-filter-button'][data-active]) {
+        color: var(--the-grid-accent);
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='filter-panel']) {
+        min-width: 240px;
+        max-width: 320px;
+        padding: 10px;
+        border: 1px solid var(--the-grid-header-border-color);
+        border-radius: 6px;
+        background: var(--the-grid-background);
+        color: var(--the-grid-foreground);
+        box-shadow: 0 6px 20px rgb(0 0 0 / 12%);
+        font: inherit;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='filter-editor'], [data-grid-part='filter-condition']) {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='filter-editor']) {
+        gap: 8px;
+    }
+
+    :where([data-grid-part='root'])
+        :where([data-grid-part='filter-operator'], [data-grid-part='filter-input'], [data-grid-part='filter-search']) {
+        width: 100%;
+        padding: 4px 6px;
+        border: 1px solid var(--the-grid-header-border-color);
+        border-radius: 4px;
+        background: var(--the-grid-background);
+        color: inherit;
+        font: inherit;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='filter-join']) {
+        display: flex;
+        gap: 12px;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='filter-choices']) {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        max-height: 240px;
+        overflow: auto;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='filter-choices'][data-loading]) {
+        opacity: 0.6;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='filter-choice']) {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        white-space: nowrap;
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='filter-empty']) {
+        color: var(--the-grid-muted-foreground);
+    }
+
+    :where([data-grid-part='root']) :where([data-grid-part='filter-clear']) {
+        align-self: flex-end;
+        padding: 3px 10px;
+        border: 1px solid var(--the-grid-header-border-color);
+        border-radius: 4px;
+        background: var(--the-grid-header-background);
+        color: inherit;
+        font: inherit;
+        cursor: pointer;
+    }
+}
