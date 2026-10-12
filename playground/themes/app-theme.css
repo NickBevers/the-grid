@@ -1,0 +1,52 @@
+/*
+ * Example brand theme: an indigo accent on cool slate greys, built through the public styling API only.
+ * It uses tokens, public parts and state attributes. No !important, no layer tricks, no private selectors.
+ * It lives in the playground on purpose. The package itself ships a neutral theme.
+ */
+.app-theme {
+    --brand-indigo: oklch(0.511 0.2 277);
+    --brand-indigo-xlight: oklch(0.962 0.018 272);
+    --brand-slate: oklch(0.913 0.009 264);
+    --brand-slate-light: oklch(0.962 0.003 264);
+    --brand-slate-xlight: oklch(0.976 0.003 264);
+    --brand-slate-dark: oklch(0.55 0.02 264);
+    --brand-slate-xdark: oklch(0.279 0.03 264);
+    --brand-slate-outline: oklch(0.85 0.012 264);
+    --brand-red: #dc2626;
+
+    color-scheme: light;
+    --the-grid-font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+    --the-grid-font-size: 13px;
+    --the-grid-radius: 8px;
+    --the-grid-background: #ffffff;
+    --the-grid-foreground: var(--brand-slate-xdark);
+    --the-grid-muted-foreground: var(--brand-slate-dark);
+    --the-grid-header-background: var(--brand-slate-light);
+    --the-grid-header-foreground: var(--brand-slate-dark);
+    --the-grid-header-border-color: var(--brand-slate-outline);
+    --the-grid-border-color: var(--brand-slate);
+    --the-grid-footer-background: var(--brand-slate-xlight);
+    --the-grid-footer-foreground: var(--brand-slate-dark);
+    --the-grid-accent: var(--brand-indigo);
+    --the-grid-row-hover-background: #1e1b4b08;
+    --the-grid-cell-hover-outline-color: var(--brand-slate-outline);
+    --the-grid-focus-background: color-mix(in srgb, var(--brand-indigo) 10%, transparent);
+    --the-grid-selected-row-background: var(--brand-indigo-xlight);
+    --the-grid-selected-row-border-color: var(--brand-indigo);
+    --the-grid-range-background: color-mix(in srgb, var(--brand-indigo) 14%, transparent);
+    --the-grid-invalid-color: var(--brand-red);
+    --the-grid-invalid-background: #fef2f2;
+    --the-grid-group-row-background: var(--brand-slate-xlight);
+    --the-grid-pinned-border-color: var(--brand-slate);
+}
+
+/* A class the application sets through cellClass gets the not-allowed cursor. A plain class beats the layered default. */
+.app-theme .non-editable-cell {
+    cursor: not-allowed;
+}
+
+/* Rows the application marks as muted are italic and faded. rowClassName supplies the class. */
+.app-theme [data-grid-part='row'].muted-row [data-grid-part='cell'] {
+    font-style: italic;
+    color: var(--brand-slate-dark);
+}
